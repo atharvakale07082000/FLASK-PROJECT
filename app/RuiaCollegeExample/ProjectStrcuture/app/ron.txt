@@ -1,0 +1,146 @@
+
+
+SQL> select eno, sal from emp2@ronlink where eno in(1,2);
+
+       ENO SAL
+---------- --------------------------------------------------
+         1 1500
+         2 14000
+
+SQL> select e2.email from emp1 e1, emp2@ronlink e2 where
+  2  e1.eno=1 and e1.eno=e2.eno and e1.ename='megha';
+
+no rows selected
+
+SQL> select * from emp1;
+
+       ENO ENAME
+---------- ----------------------------------------
+ADDRESS
+--------------------------------------------------
+         1 Afshan
+Bandra
+
+         2 Pooja
+Jogeshwari
+
+         3 Priya
+Borivali
+
+
+       ENO ENAME
+---------- ----------------------------------------
+ADDRESS
+--------------------------------------------------
+         4 Teju
+Andheri
+
+
+SQL> select e2.email from emp1 e1, emp2@ronlink e2 where
+  2  e1.eno=1 and e1.eno=e2.eno and e1.ename='Afshan';
+
+EMAIL
+----------------------------------------
+afshan@gmail.com
+
+SQL> select e1.ename, e2.email from emp1 e1, emp2@ronlink e2
+  2  where e1.eno=4 and e1.eno=e2.eno;
+
+ENAME
+----------------------------------------
+EMAIL
+----------------------------------------
+Teju
+teju@yahoo.com
+
+
+SQL> select e1.ename, e2.sal from emp1 e1, emp2@ronlink e2
+  2  where e1.eno = e2.eno and e2.sal>2000;
+
+ENAME
+----------------------------------------
+SAL
+--------------------------------------------------
+Pooja
+14000
+
+Priya
+5000
+
+Teju
+8000
+
+
+SQL> create table emp_glo1
+  2  (eno number(5),
+  3  ename varchar2(40),
+  4  address varchar2(50),
+  5  email varchar2(40),
+  6  sal number(8));
+
+Table created.
+
+SQL> create table emp21
+  2  (eno number(3) primary key,
+  3  ename varchar2(20),
+  4  address varchar(20),
+  5  email varchar2(30),
+  6  sal number(8));
+
+Table created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> 
+
+
+
+
+
+create or replace trigger trigemp_glo
+after insert on emp_glo
+for each row
+begin
+
+insert into emp1
+values(:new.eno,:new.ename,:new.address);
+insert into emp2@ronlink 
+values(:new.eno,:new.email,:new.sal);
+end;
+/
+
+
+insert into emp_glo
+values(1,'Afshan','Bandra ','afshan@gmail.com',1500);
+
+insert into emp_glo
+values(2,'Pooja','Jogeshwari','pooja@yahoo.com',14000);
+
+insert into emp_glo
+values(3,'Priya','Borivali','priya5@gmail.com',5000);
+
+insert into emp_glo
+values(4,'Teju','Andheri','teju@yahoo.com',8000);
+
+
+COMMIT;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
